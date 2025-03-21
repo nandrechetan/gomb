@@ -53,9 +53,24 @@ go get -u github.com/nandrechetan/gomb
 ```
 
 ### Output:
+```sql
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY COMMENT 'User ID',
+    username VARCHAR(50) NOT NULL COMMENT 'Unique username',
+    email VARCHAR(255) NOT NULL COMMENT 'User email address',
+    password_hash VARCHAR(100) NOT NULL,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    birth_date DATE,
+    is_active BOOLEAN DEFAULT TRUE,
+    login_count INTEGER DEFAULT 0,
+    last_login TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-"CREATE TABLE users (id SERIAL PRIMARY KEY COMMENT 'User ID', username VARCHAR(50) NOT NULL COMMENT 'Unique username', email VARCHAR(255) NOT NULL COMMENT 'User email address', password_hash VARCHAR(100) NOT NULL, first_name VARCHAR(50), last_name VARCHAR(50), birth_date DATE, is_active BOOLEAN DEFAULT TRUE, login_count INTEGER DEFAULT 0, last_login TIMESTAMP, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP) COMMENT ON TABLE users IS 'Store user information'"
-
+COMMENT ON TABLE users IS 'Store user information';
+```
 ## 🤝 Contributing
 
 We welcome contributions! Please check out the issues tab for open tasks and improvements.
