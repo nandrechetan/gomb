@@ -133,7 +133,7 @@ func TestAlterTable_ToSQL(t *testing.T) {
 			alterTable: func() *gomb.AlterTable {
 				alter := gomb.NewAlterTable("users")
 				col := gomb.NewColumn("username")
-				col.NewName = "login_name"
+				col.SetNewName("login_name")
 				alter.AlterColumn(col)
 				return alter
 			}(),
@@ -148,7 +148,7 @@ func TestAlterTable_ToSQL(t *testing.T) {
 				alter.DropColumn(gomb.NewColumn("old_category"))
 
 				renameCol := gomb.NewColumn("desc")
-				renameCol.NewName = "description"
+				renameCol.SetNewName("description")
 				alter.AlterColumn(renameCol)
 
 				return alter

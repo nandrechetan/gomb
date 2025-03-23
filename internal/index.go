@@ -5,6 +5,22 @@ import (
 	"strings"
 )
 
+// Index represents a database index
+type Index struct {
+	name           string
+	table          string
+	columns        []string
+	unique         bool
+	concurrently   bool
+	using          string
+	where          string
+	schema         string
+	includeColumns []string
+	method         string // btree, hash, gist, gin, etc.
+	tablespace     string
+	withOptions    []string
+}
+
 // NewIndex creates a new index builder
 func NewIndex(name string) *Index {
 	return &Index{

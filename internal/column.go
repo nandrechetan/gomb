@@ -7,16 +7,70 @@ import (
 	"strings"
 )
 
+// Column represents a database column
+type Column struct {
+	Name             string         `json:"name"`        // Column name
+	DataType         DataType       `json:"data_type"`   // Data type (e.g., VARCHAR, INTEGER, etc.)
+	Length           int            `json:"length"`      // Length (e.g., VARCHAR(255)
+	Precision        int            `json:"precision"`   // For DECIMAL or numeric types
+	Scale            int            `json:"scale"`       // For DECIMAL or numeric types
+	PrimaryKey       bool           `json:"primary_key"` // Whether this column is a primary key
+	AutoNumber       bool           `json:"auto_number"` // Whether this column is auto-incrementing
+	AutoNumberStart  int            `json:"auto_number_start"`
+	AutoNumberPrefix string         `json:"auto_number_prefix"`
+	NotNull          bool           `json:"not_null"`       // Whether this column allows NULL values
+	Unique           bool           `json:"unique"`         // Whether this column has a UNIQUE constraint
+	Default          string         `json:"default"`        // Default value for the column
+	Check            string         `json:"check"`          // CHECK constraint expression
+	References       string         `json:"references"`     // Foreign key reference (e.g., "other_table(column)")
+	Generated        string         `json:"generated"`      // Expression for generated columns
+	Collation        string         `json:"collation"`      // Collation for text-based columns
+	Comment          string         `json:"comment"`        // Comment or description of the column
+	Storage          string         `json:"storage"`        // Storage option (e.g., PLAIN, EXTERNAL)
+	Compression      string         `json:"compression"`    // Compression method (PostgreSQL 14+)
+	IdentityStart    int            `json:"identity_start"` // Start value for identity columns
+	IdentityInc      int            `json:"identity_inc"`   // Increment value for identity columns
+	Attributes       map[string]any `json:"attributes"`     // Custom/extensible attributes
+	// NewName          string         `json:"new_name"`
+	// NewDataType      DataType       `json:"new_data_type"`
+	UpdateOptions *ColumnUpdate `json:"update_options,omitempty"`
+}
+
+// ColumnUpdate holds modification details for a column
+type ColumnUpdate struct {
+	Name     string   `json:"name,omitempty"`
+	DataType DataType `json:"data_type,omitempty"`
+}
+
 // NewTable initializes and returns a new Table instance
 func NewColumn(name string) *Column {
 	return &Column{Name: name}
 }
-func (c *Column) SetNewName(name string) *Column {
-	c.NewName = name
+
+// func (c *Column) SetNewName(name string) *Column {
+// 	c.NewName = name
+// 	return c
+// }
+// func (c *Column) SetNewDataType(name DataType) *Column {
+// 	c.NewDataType = name
+// 	return c
+// }
+
+// SetNewName sets a new name for the column
+func (c *Column) SetNewName(newName string) *Column {
+	if c.UpdateOptions == nil {
+		c.UpdateOptions = &ColumnUpdate{}
+	}
+	c.UpdateOptions.Name = newName
 	return c
 }
-func (c *Column) SetNewDataType(name DataType) *Column {
-	c.NewDataType = name
+
+// SetNewDataType sets a new data type for the column
+func (c *Column) SetNewDataType(newDataType DataType) *Column {
+	if c.UpdateOptions == nil {
+		c.UpdateOptions = &ColumnUpdate{}
+	}
+	c.UpdateOptions.DataType = newDataType
 	return c
 }
 
@@ -330,7 +384,7 @@ func (col *Column) ToDataType() string {
 	return col.ToDataTypeString(col.DataType)
 }
 func (col *Column) ToNewDataType() string {
-	return col.ToDataTypeString(col.NewDataType)
+	return col.ToDataTypeString(col.UpdateOptions.DataType)
 }
 func (col *Column) ToDataTypeString(data DataType) string {
 	switch data {
